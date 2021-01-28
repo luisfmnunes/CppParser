@@ -27,3 +27,16 @@ std::string trim(std::string input){
     input = ltrim(input);
     return input;
 }
+
+//Check conditions
+bool is_dir(std::string path){
+    struct stat s;
+    if(stat(path.c_str(),&s) == 0) return false;
+    return (static_cast<bool>(S_ISDIR(s.st_mode)));
+}
+
+bool is_file(std::string path){
+    struct stat s;
+    if(stat(path.c_str(),&s)==0) return false;
+    return (static_cast<bool>(S_ISREG(s.st_mode)));
+}
