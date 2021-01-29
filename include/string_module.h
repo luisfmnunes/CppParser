@@ -3,6 +3,7 @@
 #include<sstream>
 #include<sys/stat.h>
 #include<algorithm>
+#include<type_traits>
 
 //String operations
 std::vector<std::string> split(std::string input, char delimiter = ' ');
@@ -19,4 +20,7 @@ template<class Numeric> inline bool is_numeric(std::string input){
     return((std::istringstream(input) >> n >> std::ws).eof());
 };
 
+template<class T> inline bool is_type_numeric(T var){
+    return std::is_arithmetic<decltype(var)>::value;
+}
 
