@@ -7,6 +7,7 @@
 
 //String operations
 std::vector<std::string> split(std::string input, char delimiter = ' ');
+std::string join(std::vector<std::string> list, char delimiter = ' ');
 std::string trim(std::string input);
 std::string remove_extension(std::string input);
 

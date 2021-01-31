@@ -11,6 +11,8 @@
 #define MAGENTA_FG "\033[1;35m"
 #define CYAN_FG "\033[1;36m"
 #define CLOSE_COLOR "\033[0m"
+#define BOLD "\e[1m"
+#define CLOSE_BOLD "\e[0m"
 
 //C-Like variadic functions
 void _log(const char *format, ...);

@@ -7,8 +7,16 @@ std::vector<std::string> split(std::string input, char delimiter){
         output.push_back(input.substr(0,pos));
         input.erase(pos);
     }
-
     return output.empty() ? std::vector<std::string>() : output;
+}
+
+std::string join(std::vector<std::string> list, char delimiter = ' '){
+    std::string output;
+    for(auto str : list){
+        output += str;
+        if(str != list.back()) output+=delimiter;
+    }
+    return output;
 }
 
 static std::string rtrim(std::string input){
