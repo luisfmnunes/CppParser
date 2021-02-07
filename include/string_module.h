@@ -1,4 +1,8 @@
+#ifndef STRING_MODULE_H
+#define STRING_MODULE_H
+
 #include"print_module.h"
+#include<cctype>
 #include<vector>
 #include<sstream>
 #include<sys/stat.h>
@@ -16,7 +20,7 @@ bool has_extension(std::string input);
 bool is_file(std::string path);
 bool is_dir(std::string path);
 
-template<class Numeric> inline bool is_numeric(std::string input){
+template<typename Numeric> inline bool is_numeric(std::string input){
     Numeric n;
     return((std::istringstream(input) >> n >> std::ws).eof());
 };
@@ -25,3 +29,4 @@ template<class T> inline bool is_type_numeric(T var){
     return std::is_arithmetic<decltype(var)>::value;
 }
 
+#endif

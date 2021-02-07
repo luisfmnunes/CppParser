@@ -1,4 +1,5 @@
 #include "include/print_module.h"
+#include "include/parser_module.h"
 
 using namespace std;
 
@@ -15,5 +16,14 @@ void say_hello(){
 }
 
 int main(){
+    int number = 0;
+    bool flag = false;
     say_hello();
+
+    deCiPPher parser(true);
+
+    DCPP_ADD_OPTION(parser,"-n","aaa",number,1,false);
+    DCPP_ADD_FLAG(parser,"-f","bbb",flag);
+
+    return EXIT_SUCCESS;
 }

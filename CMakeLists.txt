@@ -4,8 +4,10 @@ project(deCiPPher VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
+file(GLOB sources src/*.cpp)
+
 add_library(deCiPPher deCiPPher.cpp)
-add_executable(debug deCiPPher.cpp src/print_module.cpp)
+add_executable(debug deCiPPher.cpp ${sources})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

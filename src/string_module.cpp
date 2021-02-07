@@ -1,4 +1,8 @@
 #include "../include/string_module.h"
+#if !defined(S_ISDIR) && !defined(S_ISREG) && defined(S_IFMT) && defined(S_IFREG) && defined(S_IFDIR)
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
 
 std::vector<std::string> split(std::string input, char delimiter){
     std::vector<std::string> output;
@@ -10,7 +14,7 @@ std::vector<std::string> split(std::string input, char delimiter){
     return output.empty() ? std::vector<std::string>() : output;
 }
 
-std::string join(std::vector<std::string> list, char delimiter = ' '){
+std::string join(std::vector<std::string> list, char delimiter){
     std::string output;
     for(auto str : list){
         output += str;
@@ -23,11 +27,15 @@ static std::string rtrim(std::string input){
     input.erase(std::find_if(input.rbegin(),input.rend(), [](unsigned char ch){
             return !std::isspace(ch);
         }).base(), input.end());
+
+    return input;
 }
 static std::string ltrim(std::string input){
     input.erase(input.begin(), std::find_if(input.begin(),input.end(),[](unsigned char ch){
         return !std::isspace(ch);
     }));
+
+    return input;
 }
 
 std::string trim(std::string input){
