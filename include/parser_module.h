@@ -16,7 +16,7 @@
 #define DCPP_ADD_OPTION(DCPP,DRT,DESC,REF,ARGS,REQ) DCPP.add_option(DRT,DESC,REF,ARGS,REQ,#REF);
 #define DCPP_ADD_FLAG(DCPP,DRT,DESC,REF) DCPP.add_flag(DRT,DESC,REF,#REF);
 #define DCPP_ADD_HELP(DCPP,DRT,DESC) DCPP.add_help(DRT,DESC);
-#define DCPP_PARSE(DCPP,ARGC,ARGV);
+#define DCPP_PARSE(DCPP,ARGC,ARGV) DCPP.parse_arguments(ARGC,ARGV);
 
 enum class dcppError{
     OK = 0,
@@ -49,6 +49,7 @@ class deCiPPher {
             for(auto dir : directives){
                 if(debug) os_debug("Adding directive",drt,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
                 add_directive(dir,description,ref,args,req,name);
+                types.emplace(dir,dcppType::OPTION);
             }
 
             drt_description.emplace(drt,description);
@@ -88,7 +89,8 @@ class deCiPPher {
             // if(var_names.find(name)!=var_names.end()) UNNECESSARY
             //     return dcpp_DOUBLE_BIND;  
             parsing_lambdas.emplace(drt,[this,&ref,drt,name](std::string value) -> dcppError {
-                if(is_type_numeric(ref) && !is_numeric<std::remove_reference<decltype(ref)>::type>(value)) return dcppError::WRONG_TYPE;
+                if(is_type_numeric(ref) && !is_numeric<std::remove_reference<decltype(ref)>::type>(value)) {os_debug("Value is",value); return dcppError::WRONG_TYPE;}
+                if(!name.empty()) os_debug("Setting variable",name,"with value:",value);
                 std::stringstream string_parser;
                 string_parser << value;
                 string_parser >> ref;

@@ -6,11 +6,14 @@
 
 std::vector<std::string> split(std::string input, char delimiter){
     std::vector<std::string> output;
-    while(input.find(delimiter)!=std::string::npos){
-        std::string::size_type pos = input.find(delimiter);
+    std::string::size_type pos = input.find(delimiter);
+    while(pos!=std::string::npos){
         output.push_back(input.substr(0,pos));
-        input.erase(pos);
+        input.erase(0,pos+1);
+        pos = input.find(delimiter);
+        if(pos==std::string::npos) output.push_back(input);
     }
+
     return output.empty() ? std::vector<std::string>() : output;
 }
 

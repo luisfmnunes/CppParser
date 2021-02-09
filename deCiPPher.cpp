@@ -15,7 +15,7 @@ void say_hello(){
     _debug("C THAT %d",42);
 }
 
-int main(){
+int main(int argc, char** argv){
     int number = 0;
     bool flag = false;
     say_hello();
@@ -24,6 +24,11 @@ int main(){
 
     DCPP_ADD_OPTION(parser,"-n","aaa",number,1,false);
     DCPP_ADD_FLAG(parser,"-f","bbb",flag);
+    DCPP_ADD_HELP(parser,"-h","A Debug example to test deCiPPher");
+    DCPP_PARSE(parser,argc,argv);
+
+    os_log("Value of number after parser =",number);
+    os_log("Value of flag after parser =", flag ? "true" : "false");
 
     return EXIT_SUCCESS;
 }
