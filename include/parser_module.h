@@ -47,7 +47,7 @@ class deCiPPher {
             std::vector<std::string> directives = split(drt,',');
             if (directives.empty()) directives.push_back(drt);
             for(auto dir : directives){
-                if(debug) os_debug("Adding directive",drt,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
+                if(debug) os_debug("Adding directive",dir,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
                 add_directive(dir,description,ref,args,req,name);
                 types.emplace(dir,dcppType::OPTION);
             }

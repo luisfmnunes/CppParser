@@ -56,15 +56,16 @@ dcppError deCiPPher::add_help(std::string drt, std::string description){
             types.emplace(d,dcppType::HELP);
         
     }
+    drt_description[drt] = description;
     return dcppError::OK;
 }
 
 //Prints description, usage, and directives description;
 void deCiPPher::print_help(){
-    fprintf(stderr,"%sDESCRIPTION%s\n\t%s\n",BOLD,CLOSE_BOLD,description.c_str());
+    fprintf(stderr,"\n%sDESCRIPTION%s\n\t%s\n",BOLD,CLOSE_BOLD,description.c_str());
     fprintf(stderr,"%sDIRECTIVES%s\n",BOLD,CLOSE_BOLD);
     for(auto pair : drt_description){
-        fprintf(stderr,"\t%s%s%s\n\t\t%s\n",BOLD,pair.first.c_str(),CLOSE_BOLD,pair.second.c_str());
+        fprintf(stderr,"\t%s%s%s:\n\t\t%s\n",BOLD,pair.first.c_str(),CLOSE_BOLD,pair.second.c_str());
     }
     fprintf(stderr,"%sUSAGE%s\n\t%s\n",BOLD,CLOSE_BOLD,usage.c_str());
 }
@@ -85,16 +86,16 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                 int _args = 0;
                 for(char ch : splitter.front()){
                     if(ch=='-') continue;
-                    std::string tmp_d = splitter.front().front()=='-' ? "-"+ch : ""+ch;
+                    std::string tmp_d = splitter.front().front()=='-' ? "-"+std::string(1,ch) : ""+std::string(1,ch);
                     if(directives.find(tmp_d)!=directives.end()) _args+=arg_count[tmp_d];
                     else os_warn("Directive",tmp_d,"passed but not set in parser");
                 }               
                 if (_args!=1){
-                    os_warn("Value '",splitter.back(),"' passed but a single key requires multiple arguments or multiple keys require at least 1 argument.");
+                    os_warn("Value '",splitter.back(),"' passed but a single key requires multiple arguments or multiple keys require at least 1 argument. Ignoring argument.");
                 } else { //solves arguments
                     for(char ch : splitter.front()){
                         if(ch == '-') continue;
-                        std::string tmp_d = splitter.front().front()=='-' ? "-"+ch : ""+ch;
+                        std::string tmp_d = splitter.front().front()=='-' ? "-"+std::string(1,ch) : ""+std::string(1,ch);
                         if(directives.find(tmp_d)!=directives.end()){
                             switch (types[tmp_d]){
                             case dcppType::OPTION:
@@ -133,8 +134,8 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                     case dcppType::OPTION:
                     {
                         uint arg_c = arg_count[drt];
-                        if(i+arg_c >= argc){
-                            os_error("Directive",drt,"expected",arg_c,"arguments, but only", argc-(i+arg_c),"arguments are available");
+                        if((i+1)+arg_c >= argc){
+                            os_error("Directive",drt,"expected",arg_c,"arguments, but only", argc-((i+1)+arg_c),"arguments are available");
                             continue;
                         }
                     }
@@ -156,19 +157,17 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                 }
             } else{ //Doens't exist checking for chained keys
                 os_warn("Directive",drt,"passed but not set. Checking if contains concatenated keys");
-                int _args = 0; //number of arguments already consumed by options
                 for(char ch : drt){
                     if(ch == '-') continue;
-                    std::string tmp_d = drt.front()=='-' ? "-"+ch : ""+ch;
+                    std::string tmp_d = (drt.front()=='-' ? "-"+ std::string(1,ch) : "" + std::string(1,ch));
                     if(directives.find(tmp_d)!=directives.end()){
                             switch (types[tmp_d]){
                             case dcppType::OPTION:
-                                if(_args+i+arg_count[tmp_d] >= argc){
-                                    os_error("Directive",drt,"expected",arg_count[tmp_d],"arguments, but only", argc-(i+arg_count[tmp_d]+_args),"arguments are available");
+                                if((i+1)+arg_count[tmp_d] >= argc){
+                                    os_error("Directive",tmp_d,"expected",arg_count[tmp_d],"arguments, but only", argc-((i+1)+arg_count[tmp_d]),"arguments are available");
                                     continue;
                                 }
                                 err = parsing_lambdas[tmp_d](arguments[++i]); //allow only 1 argument for now
-                                _args++; // assume only 1 argument for now
                                 break;
                             case dcppType::FLAG:
                                 err = parsing_lambdas[tmp_d]("1");
@@ -179,7 +178,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                         }
 
                         if(err != dcppError::OK){
-                            os_warn(error_message(err,drt));
+                            os_warn(error_message(err,tmp_d));
                             continue;
                         }
                     } else os_warn("Directive",tmp_d,"passed but not set in parser");
@@ -205,7 +204,7 @@ std::string deCiPPher::error_message(dcppError error, std::string var){
         return "Directive already set and binded to variable";
         break;
     case dcppError::WRONG_TYPE:
-        return "Value passed to numeric variable " + var + (var.empty() ? "" : " ") + "is not numeric";
+        return "Value passed to numeric variable " + var + (var.empty() ? "" : " ") + "is not supported";
         break;
     case dcppError::NOT_EXIST:
         return "Directive passed isn't binded to a variable";
