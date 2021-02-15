@@ -22,21 +22,21 @@ deCiPPher::deCiPPher(std::string description, std::string usage, bool debug){
 deCiPPher::deCiPPher(bool debug) : debug{debug}{}
 
 //Adds flag setting directives
-dcppError deCiPPher::add_flag(std::string drt, std::string description, bool &ref, std::string name){
-    std::vector<std::string> directives = split(drt,',');
-    if (directives.empty()) directives.push_back(drt);
-    for(auto dir : directives){
+dcppError deCiPPher::add_flag(std::string drt, std::string desc, bool &ref, std::string name){
+    std::vector<std::string> drts = split(drt,',');
+    if (drts.empty()) drts.push_back(drt);
+    for(auto dir : drts){
         if(debug) os_debug("Adding directive",drt,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
-        add_directive(dir,description,ref,0,false,name);
+        add_directive(dir,desc,ref,0,false,name);
         types.emplace(dir,dcppType::FLAG);
     }
 
-    drt_description.emplace(drt,description);
+    drt_description.emplace(drt,desc);
     return dcppError::OK;
 }
 
 //Adds help printing directives
-dcppError deCiPPher::add_help(std::string drt, std::string description){
+dcppError deCiPPher::add_help(std::string drt, std::string desc){
     std::vector<std::string> directives_arg = split(drt,',');
     if (directives_arg.empty()) directives_arg.push_back(drt);
     for(auto d : directives_arg){
@@ -56,7 +56,7 @@ dcppError deCiPPher::add_help(std::string drt, std::string description){
             types.emplace(d,dcppType::HELP);
         
     }
-    drt_description[drt] = description;
+    drt_description[drt] = desc;
     return dcppError::OK;
 }
 
@@ -72,7 +72,7 @@ void deCiPPher::print_help(){
 
 //TODO Treat required arguments (return if required not set), in Options, check if next argumment is another directive and warn possible error
 dcppError deCiPPher::parse_arguments(int argc, char** argv){
-    dcppError err;
+    dcppError err = dcppError::OK;
     std::vector<std::string> arguments;
     for(int i = 1; i < argc; i++){
         arguments.push_back(argv[i]);

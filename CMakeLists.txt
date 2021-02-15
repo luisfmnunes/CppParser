@@ -3,6 +3,7 @@ project(deCiPPher VERSION 0.1.0)
 
 include(CTest)
 enable_testing()
+add_subdirectory(tests)
 
 file(GLOB sources src/*.cpp)
 

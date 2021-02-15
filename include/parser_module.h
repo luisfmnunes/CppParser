@@ -44,14 +44,13 @@ class deCiPPher {
 
         //Inline Methods
         template<class T> inline dcppError add_option(std::string drt, std::string description, T& ref, uint args, bool req, std::string name = ""){
-            std::vector<std::string> directives = split(drt,',');
-            if (directives.empty()) directives.push_back(drt);
-            for(auto dir : directives){
+            std::vector<std::string> drts = split(drt,',');
+            if (drts.empty()) drts.push_back(drt);
+            for(auto dir : drts){
                 if(debug) os_debug("Adding directive",dir,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
                 add_directive(dir,description,ref,args,req,name);
                 types.emplace(dir,dcppType::OPTION);
             }
-
             drt_description.emplace(drt,description);
             return dcppError::OK;
         }
