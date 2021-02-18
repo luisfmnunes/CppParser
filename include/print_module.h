@@ -37,9 +37,21 @@ void _debug(const char *format, ...);
 //C++-Like variadic functions
 
 // Static Print Functions
+#ifdef _WIN32
+
+#pragma warning(push)
+#pragma warning(disable : 4505) //remove unreferrenced function warning C4505
+
+#endif
+
 static void rec_print(){
     std::cout << std::endl;
 }
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
 template<class T, class... Args> static inline void rec_print(const T& First, Args... args){
     std::cout << First << " ";
     rec_print(args...);

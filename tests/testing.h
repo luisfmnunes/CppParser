@@ -19,7 +19,7 @@
                                   + std::to_string(__LINE__) \
                                   + std::string(" in ") \
                                   + std::string( __FUNC_MACRO__ ) \
-        std::endl;\
+        << std::endl;\
         return false;\
     }\
 }
