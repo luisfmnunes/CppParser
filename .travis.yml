@@ -31,5 +31,5 @@ install:
 
 script:
   - $CXX --version
-  - mkdir build && cd build && cmake .. --target ALL_BUILD --config Debug
+  - mkdir build && cd build && mkdir Debug && cmake .. --target ALL_BUILD --config Debug
   - ctest -j10 -C Debug -T test --output-on-failure
