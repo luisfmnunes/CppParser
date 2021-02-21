@@ -17,5 +17,5 @@ addons:
 
 script:
   - $CXX --version
-  - mkdir build && cd build && mkdir Debug && cmake .. --target ALL_BUILD
+  - mkdir build && cd build && mkdir Debug && cmake ..
   - ctest -j10 -T test --output-on-failure
