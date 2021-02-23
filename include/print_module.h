@@ -44,7 +44,7 @@ void _debug(const char *format, ...);
 
 #endif
 
-static void rec_print(){
+static inline void rec_print(){
     std::cout << std::endl;
 }
 
@@ -55,23 +55,26 @@ static void rec_print(){
 template<class T, class... Args> static inline void rec_print(const T& First, Args... args){
     std::cout << First << " ";
     rec_print(args...);
-};
+}
 
 template<class... Args> inline void os_log(Args... args){
     std::cout << '(' << getpid() << ") [" << CYAN_FG << "LOG" << CLOSE_COLOR << "]: ";
     rec_print(args...);
-};
+}
+
 template<class... Args> inline void os_warn(Args... args){
     std::cout << '(' << getpid() << ") [" << YELLOW_FG << "WARNING" << CLOSE_COLOR << "]: ";
     rec_print(args...);
-};
+}
+
 template<class... Args> inline void os_error(Args... args){
     std::cout << '(' << getpid() << ") [" << RED_FG << "ERROR" << CLOSE_COLOR << "]: ";
     rec_print(args...);
-};
+}
+
 template<class... Args> inline void os_debug(Args... args){
     std::cout << '(' << getpid() << ") [" << MAGENTA_FG << "DEBUG" << CLOSE_COLOR << "]: ";
     rec_print(args...);
-};
+}
 
 #endif

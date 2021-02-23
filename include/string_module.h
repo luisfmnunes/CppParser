@@ -23,7 +23,7 @@ bool is_dir(std::string path);
 template<typename Numeric> inline bool is_numeric(std::string input){
     Numeric n;
     return((std::istringstream(input) >> n >> std::ws).eof());
-};
+}
 
 template<class T> inline bool is_type_numeric(T var){
     return std::is_arithmetic<decltype(var)>::value;

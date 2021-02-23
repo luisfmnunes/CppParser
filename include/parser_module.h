@@ -88,7 +88,7 @@ class deCiPPher {
             // if(var_names.find(name)!=var_names.end()) UNNECESSARY
             //     return dcpp_DOUBLE_BIND;  
             parsing_lambdas.emplace(drt,[this,&ref,drt,name](std::string value) -> dcppError {
-                if(is_type_numeric(ref) && !is_numeric<std::remove_reference<decltype(ref)>::type>(value)) {os_debug("Value is",value); return dcppError::WRONG_TYPE;}
+                if(is_type_numeric(ref) && !is_numeric<typename std::remove_reference<decltype(ref)>::type>(value)) {os_debug("Value is",value); return dcppError::WRONG_TYPE;}
                 if(!name.empty()) os_debug("Setting variable",name,"with value:",value);
                 std::stringstream string_parser;
                 string_parser << value;
@@ -100,8 +100,9 @@ class deCiPPher {
             required.emplace(drt,req);
             arg_count.emplace(drt,args);
             if(!name.empty()) var_names.emplace(drt,name);
+            if(!description.empty()){}
             return dcppError::OK;
-        };
+        }
 
         // Methods
         

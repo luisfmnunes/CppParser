@@ -47,6 +47,7 @@ dcppError deCiPPher::add_help(std::string drt, std::string desc){
             if(debug) os_debug("Adding help directive",drt,"to deCiPPher parser. Use to print help description.");  
             parsing_lambdas.emplace(d, [this,d] (std::string blank) -> dcppError {
                 print_help();
+                if(blank.empty()){}
                 return dcppError::OK;
             }); 
 
@@ -134,7 +135,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                     case dcppType::OPTION:
                     {
                         uint arg_c = arg_count[drt];
-                        if((i+1)+arg_c >= argc){
+                        if((i+1)+arg_c >= (uint) argc){
                             os_error("Directive",drt,"expected",arg_c,"arguments, but only", argc-((i+1)+arg_c),"arguments are available");
                             continue;
                         }
@@ -163,7 +164,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                     if(directives.find(tmp_d)!=directives.end()){
                             switch (types[tmp_d]){
                             case dcppType::OPTION:
-                                if((i+1)+arg_count[tmp_d] >= argc){
+                                if((i+1)+arg_count[tmp_d] >= (uint) argc){
                                     os_error("Directive",tmp_d,"expected",arg_count[tmp_d],"arguments, but only", argc-((i+1)+arg_count[tmp_d]),"arguments are available");
                                     continue;
                                 }
