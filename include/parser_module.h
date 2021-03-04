@@ -16,7 +16,7 @@
 #define DCPP_ADD_OPTION(DCPP,DRT,DESC,REF,ARGS,REQ) DCPP.add_option(DRT,DESC,REF,ARGS,REQ,#REF);
 #define DCPP_ADD_FLAG(DCPP,DRT,DESC,REF) DCPP.add_flag(DRT,DESC,REF,#REF);
 #define DCPP_ADD_HELP(DCPP,DRT,DESC) DCPP.add_help(DRT,DESC);
-#define DCPP_PARSE(DCPP,ARGC,ARGV) DCPP.parse_arguments(ARGC,ARGV);
+#define DCPP_PARSE(DCPP,ARGC,ARGV) DCPP.parse_arguments(ARGC,ARGV)
 
 enum class dcppError{
     OK = 0,
@@ -48,9 +48,10 @@ class deCiPPher {
             if (drts.empty()) drts.push_back(drt);
             for(auto dir : drts){
                 if(debug) os_debug("Adding directive",dir,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
-                add_directive(dir,description,ref,args,req,name);
+                add_directive(dir,description,ref,args,name);
                 types.emplace(dir,dcppType::OPTION);
             }
+            if(req) required.emplace(drt,true);
             drt_description.emplace(drt,description);
             return dcppError::OK;
         }
@@ -82,7 +83,7 @@ class deCiPPher {
         umap_s drt_description;
 
         //Inline Methods
-        template<class T> inline dcppError add_directive(std::string drt, std::string description,T& ref,uint args,bool req,std::string name=""){
+        template<class T> inline dcppError add_directive(std::string drt, std::string description,T& ref,uint args,std::string name=""){
             if(directives.find(drt)!=directives.end())
                 return dcppError::ALREADY_SET;
             // if(var_names.find(name)!=var_names.end()) UNNECESSARY
@@ -97,7 +98,6 @@ class deCiPPher {
             }); 
 
             directives.emplace(drt);
-            required.emplace(drt,req);
             arg_count.emplace(drt,args);
             if(!name.empty()) var_names.emplace(drt,name);
             if(!description.empty()){}

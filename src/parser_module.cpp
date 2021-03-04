@@ -27,7 +27,7 @@ dcppError deCiPPher::add_flag(std::string drt, std::string desc, bool &ref, std:
     if (drts.empty()) drts.push_back(drt);
     for(auto dir : drts){
         if(debug) os_debug("Adding directive",drt,"to deCiPPher parser.", name.empty() ? "" : (std::string("Binding to variable " + name)));
-        add_directive(dir,desc,ref,0,false,name);
+        add_directive(dir,desc,ref,0,name);
         types.emplace(dir,dcppType::FLAG);
     }
 
@@ -74,7 +74,21 @@ void deCiPPher::print_help(){
 //TODO Treat required arguments (return if required not set), in Options, check if next argumment is another directive and warn possible error
 dcppError deCiPPher::parse_arguments(int argc, char** argv){
     dcppError err = dcppError::OK;
+    std::unordered_multimap<uint,std::string> rq_checker;
+    std::unordered_map<std::string,uint> rq_idx;
     std::vector<std::string> arguments;
+
+    { //local scope to insert required directives in required checker and required index
+        uint idx = 1;
+        for(auto req : required){
+            for(auto drt : split(req.first,',')){
+                rq_checker.emplace(idx,drt);
+                rq_idx[drt]=idx;
+            }
+            idx++;
+        }
+    }
+    
     for(int i = 1; i < argc; i++){
         arguments.push_back(argv[i]);
     }
@@ -101,6 +115,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                             switch (types[tmp_d]){
                             case dcppType::OPTION:
                                 err = parsing_lambdas[tmp_d](splitter.back());
+                                if(rq_idx.find(tmp_d)!=rq_idx.end()) rq_checker.erase(rq_idx[tmp_d]);
                                 break;
                             case dcppType::FLAG:
                                 err = parsing_lambdas[tmp_d]("1");
@@ -115,8 +130,10 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                 }
                 continue;
             } else {
-                if(types[splitter.front()]==dcppType::OPTION)
+                if(types[splitter.front()]==dcppType::OPTION){
                     err = parsing_lambdas[splitter.front()](splitter.back()); //For now, but later check what to do if splitter size > 2
+                    if(rq_idx.find(splitter.front())!=rq_idx.end()) rq_checker.erase(rq_idx[splitter.front()]);
+                }
                 else{
                     err = parsing_lambdas[splitter.front()]("1");
                     os_warn("Unnecessary use of = to set argument of either flag or help directive.");
@@ -141,6 +158,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                         }
                     }
                     err = parsing_lambdas[drt](arguments[++i]); //for now only 1 argument is accepted
+                    if(rq_idx.find(drt)!=rq_idx.end()) rq_checker.erase(rq_idx[drt]);
                     break;
 
                     case dcppType::FLAG:
@@ -169,6 +187,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
                                     continue;
                                 }
                                 err = parsing_lambdas[tmp_d](arguments[++i]); //allow only 1 argument for now
+                                if(rq_idx.find(tmp_d)!=rq_idx.end()) rq_checker.erase(rq_idx[tmp_d]);
                                 break;
                             case dcppType::FLAG:
                                 err = parsing_lambdas[tmp_d]("1");
@@ -191,6 +210,7 @@ dcppError deCiPPher::parse_arguments(int argc, char** argv){
 
     }
 
+    if(!rq_checker.empty()) return dcppError::REQUIRED_NOT_SET;
     return dcppError::OK;
 }
 
