@@ -1,5 +1,5 @@
 ![logo](res/logo.png)
-# deCiPPHer: C++ Parser
+# deCiPPHer: C++ Parser ![master_travis_tag](https://travis-ci.com/luisfmnunes/deCiPPHer.svg?branch=master)
 A library made to parse arguments passed by the command line.
 
 ## The Library
