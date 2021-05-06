@@ -4,7 +4,7 @@ A library made to parse arguments passed by the command line.
 
 ## The Library
 
-This library has the purpose of this library is to provide a C++ command line parser. There are two classes of objects in this library, options and flags.
+This library has the purpose of providing a C++ command line parser. There are two classes of objects in this library, options and flags.
 
 ### Options
 These are variables which receive values to override a local variable content. These variables require an argument. The example below set the option -n or --num_of_threads which will store the value passed in command line to local variable (int) number_of_threads.
@@ -28,7 +28,7 @@ These are variables which receive values to override a local variable content. T
 ```
 
 ### Flags
-These are boolean variables which purpose is to provide an specific behaviour whenever this flag is passed on command line. The behaviour of a flag is always changing the value from false to true. The example below set a flag to determine if the image of an example should be saved on disk whenever the flag -s or --save is called.
+These are boolean variables which purpose is to provide an specific behaviour whenever this flag is passed on command line. The behaviour of a flag is always changing the value from false to true. The example below set a flag to determine if the image of an example should be saved on disk, doing so whenever the flag -s or --save is called.
 
 ``` c++
     // ...
@@ -58,7 +58,7 @@ The help flag will print the description (if provided on the parser constructor)
 
 ## Usage
 
-The directives definition should follow the call of single dash (-) for single character directive (*e.g.* -A) and double dash (--) for multiple character directive (*e.g.* --Append), although it's not required.
+The directives definition should follow the call of single dash (-) for single character directive (*e.g.* -A) and double dash (--) for multiple character directive (*e.g.* --Append), although it's not required. After defining all directives the parser function should be called to parse the argc + argv input. For a better experience on the debugging feature of the parser, it's recommended to use the Macro calls of the library (which allow to register the name of the variables being binded to the respective directive).
 
 #### Assignment
 
@@ -88,8 +88,8 @@ The library is built using CMake, and using the following commands on the cloned
     make -j 4
 ```
 
-To use the library you should use the ouput of the building process (**.a** or **.so** for static | shared library on Unix, and **.lib** for Windows users).
+To use the library, you should use the ouput of the building process (**.a** or **.so** for static | shared library on Unix, and **.lib** for Windows users) and the include files.
 
-## Suggetions and Colaboration
+## Suggestions and Colaboration
 
 Suggestions and colaborations are welcome and can be submitted with a new Issue or a merge request.
